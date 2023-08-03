@@ -8,24 +8,21 @@ export default async function handler(req, res) {
       data: [],
     }); // Method Not Allowed
   } else if (req.method === "POST") {
-    const { id, name, age } = req.body;
-    // Update user from the database
-    await db("users")
-      .where("id", id)
-      .update({ name, age })
-      .then((response) => {
-        res.send({
-          status: StatusCodes.OK,
-          message: ReasonPhrases.OK,
-          data: response,
-        });
-      })
-      .catch((error) => {
-        res.send({
-          status: StatusCodes.INTERNAL_SERVER_ERROR,
-          message: ReasonPhrases.INTERNAL_SERVER_ERROR,
-          data: [],
-        });
+    try {
+      const { id, name, age } = req.body;
+      // Update user from the database
+      const response = await db("users").where("id", id).update({ name, age });
+      res.send({
+        status: StatusCodes.OK,
+        message: ReasonPhrases.OK,
+        data: response,
       });
+    } catch (error) {
+      res.send({
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: ReasonPhrases.INTERNAL_SERVER_ERROR,
+        data: [],
+      });
+    }
   }
 }

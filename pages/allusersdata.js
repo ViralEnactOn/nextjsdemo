@@ -53,6 +53,12 @@ function allusersdata() {
   const handleUpdateRecord = async (id) => {
     dataResponse.map(async (item) => {
       if (item.id === id) {
+        if (item.name.length === 0) {
+          setNameError("Name cannot empty.");
+          return;
+        } else {
+          setNameError("");
+        }
         if (numberRegex.test(item.age) === true) {
           setAgeError("");
           await axios
@@ -118,6 +124,9 @@ function allusersdata() {
                         />
                       ) : (
                         data.name
+                      )}
+                      {nameError && selectedRow === index && (
+                        <div className="text-red-700">{nameError}</div>
                       )}
                     </td>
                     <td className="p-2 h-20 self-center">
