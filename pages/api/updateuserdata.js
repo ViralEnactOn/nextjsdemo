@@ -8,10 +8,11 @@ export default async function handler(req, res) {
       data: [],
     }); // Method Not Allowed
   } else if (req.method === "POST") {
-    const { name, age } = req.body;
-    //   Insert users from the database
+    const { id, name, age } = req.body;
+    // Update user from the database
     await db("users")
-      .insert({ name, age })
+      .where("id", id)
+      .update({ name, age })
       .then((response) => {
         res.send({
           status: StatusCodes.OK,

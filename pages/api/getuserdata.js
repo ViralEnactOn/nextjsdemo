@@ -4,8 +4,8 @@ export default async function handler(req, res) {
   // Retrieve all users from the database
   await db
     .from("users")
-    .select("name", "age")
-    .orderBy("age", "desc")
+    // .select("name", "age")
+    // .orderBy("age", "desc")
     .then((response) => {
       res.send({
         status: StatusCodes.OK,

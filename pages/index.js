@@ -1,10 +1,13 @@
 import React, { useState } from "react";
+import { API_URL } from "../config/config";
+import axios from "axios";
+import Link from "next/link";
 
 function index() {
+  const numberRegex = /^\d+$/;
   const [disableButton, setDisableButton] = useState(false);
   const [nameError, setNameError] = useState("");
   const [ageError, setAgeError] = useState("");
-
   const [details, setDetails] = useState({
     name: {
       id: "name",
@@ -36,36 +39,41 @@ function index() {
     if (details.age.value.length === 0) {
       setAgeError("Age cannot empty.");
       return;
+    } else if (numberRegex.test(details.age.value) !== true) {
+      setAgeError("Enter numbers empty.");
+      return;
     } else {
       setAgeError("");
     }
-    // setDisableButton(true);
-    // axios
-    //   .post("https://dummyjson.com/auth/login", {
-    //     username: username,
-    //     password: password,
-    //   })
-    //   .then((res) => {
-    //     setDisableButton(false);
-    //     if (res.status === 200) {
-    //       console.log(res.data);
-    //       // Calculate token expiration time (60 minutes from now in milliseconds)
-    //       const expirationTime = new Date().getTime() + 60 * 60 * 1000;
-
-    //       // Store the authentication token and its expiration time in localStorage
-    //       localStorage.setItem("authToken", res.data.token);
-    //       localStorage.setItem("authTokenExpiration", expirationTime);
-    //       store.dispatch({ type: "UPDATE_USERDETAILS", payload: [res.data] });
-    //       navigate("/movie");
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log("Error", err);
-    //   });
+    setDisableButton(true);
+    axios
+      .post(API_URL + "insertuserdata", {
+        name: details.name.value,
+        age: details.age.value,
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          alert("Data Inserted");
+          setDisableButton(false);
+          setDetails({
+            name: {
+              id: "name",
+              value: "",
+            },
+            age: {
+              id: "age",
+              value: "",
+            },
+          });
+        }
+      })
+      .catch((err) => {
+        console.log("Error", err);
+      });
   };
 
   return (
-    <main className="min-w-max flex justify-center font-poppins bg-blue-200">
+    <main className="min-w-max flex justify-center font-poppins ">
       <div className="container">
         <div className="flex justify-center min-h-screen">
           <div className="flex self-center w-96 h-96 bg-gray-200 justify-center rounded-lg">
@@ -82,6 +90,7 @@ function index() {
                   placeholder="Enter your name"
                   value={details.name.value}
                   onChange={handleOnChange}
+                  disabled={disableButton === true}
                 />
                 {nameError && <div className="text-red-700">{nameError}</div>}
               </div>
@@ -94,6 +103,7 @@ function index() {
                   placeholder="Enter password"
                   value={details.age.value}
                   onChange={handleOnChange}
+                  disabled={disableButton === true}
                 />
                 {ageError && <div className="text-red-700">{ageError}</div>}
               </div>
@@ -104,6 +114,9 @@ function index() {
                 <button type="submit" disabled={disableButton === true}>
                   Submit
                 </button>
+              </div>
+              <div className="mt-5 flex justify-center rounded-lg bg-cyan-300 p-2 ">
+                <Link href="/allusersdata">Show all data</Link>
               </div>
             </div>
           </div>
