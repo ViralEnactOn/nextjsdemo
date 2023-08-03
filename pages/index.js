@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { API_URL } from "../config/config";
 import axios from "axios";
 import Link from "next/link";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function index() {
+  const notify = () => toast.success("User inserted!");
   const numberRegex = /^\d+$/;
   const [disableButton, setDisableButton] = useState(false);
   const [nameError, setNameError] = useState("");
@@ -53,7 +55,7 @@ function index() {
       })
       .then((res) => {
         if (res.status === 200) {
-          alert("Data Inserted");
+          notify();
           setDisableButton(false);
           setDetails({
             name: {
@@ -74,6 +76,18 @@ function index() {
 
   return (
     <main className="min-w-max flex justify-center font-poppins ">
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <div className="container">
         <div className="flex justify-center min-h-screen">
           <div className="flex self-center w-96 h-96 bg-gray-200 justify-center rounded-lg">
@@ -100,7 +114,7 @@ function index() {
                   id="age"
                   type="text"
                   className="rounded-lg p-3"
-                  placeholder="Enter password"
+                  placeholder="Enter your age"
                   value={details.age.value}
                   onChange={handleOnChange}
                   disabled={disableButton === true}

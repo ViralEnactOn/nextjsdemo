@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../config/config";
 import Link from "next/link";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function allusersdata() {
   const [dataResponse, setDataResponse] = useState([]);
@@ -9,6 +11,7 @@ function allusersdata() {
   const [nameError, setNameError] = useState("");
   const [ageError, setAgeError] = useState("");
   const numberRegex = /^\d+$/;
+  const notify = () => toast.success("User updated!");
 
   // Fetch all data
   async function handleFetchData() {
@@ -71,6 +74,7 @@ function allusersdata() {
               if (result.status === 200) {
                 setSelectedRow(null);
                 await handleFetchData();
+                notify();
               }
             })
             .catch((err) => {
@@ -85,6 +89,18 @@ function allusersdata() {
 
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <div className="flex  justify-center mt-10">
         <Link className="bg-cyan-300 p-2 rounded-lg" href="/">
           Add new record
